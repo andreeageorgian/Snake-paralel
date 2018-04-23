@@ -1,0 +1,56 @@
+Georgian Andreea - 331 CB
+----------------------------------
+TEMA 1 - Parallel Multiplayer Tron
+----------------------------------
+	Implementarea acestei teme se bazeaza pe identificarea cozilor serpilor 
+din matrice, deoarece la fiecare runda sarpele se "shift"-eaza cu o pozitie, 
+astfel incat coada devine propriul vecinul, iar capul isi modifica pozitia 
+cu o unitate conform directiei oferite la input. 
+	Astfel, am pornit prin a parcurge matricea si a identifica acele celule 
+a caror encodare este diferita de cea a celulelor vecine, cu exceptia uneia 
+(stim ca o coada are un singur vecin).
+	Dupa identificarea cozilor am trecut mai departe la jocul efctiv, la
+trecerea prin runde. Inainte de a efectua orice modificare asupra matricii, 
+ma asigur ca pe parcursul rundei respective nu voi avea vreo coliziune. Acest 
+lucru l-am realizat prin parcurgerea vectorului de serpi si numararea vecinilor 
+fiecarui cap de sarpe pe directia proprie (nu ma uit decat la vecinul care se 
+afla pe directia de deplasare a capului). 
+	Daca in urma verificarii anterioare am ajuns la concluzia ca nu vor 
+exista ciocnirii intre oricare doi jucatori, recalzulez pozitiile capurilor 
+pentru fiecare sarpe, in functie de directia de deplasare. Actualizam 
+coordonatele in vectorul de structuri de tip sarpe, identificam pozitia vecinului 
+cozii, actualizam matricea prin eliminarea cozii, mutam capul si umplem 
+spatiului gol ramas dupa deplasare cu encodarea corespunzatoare.
+	Daca in urma verificarii am ajuns la concluzia ca vor exista ciocniri 
+intre oricare doi jucatori pe parcursul rundei respective, atunci nu mai 
+actualizam matricea.
+	Pentru a scadea timpul de rulare am ales sa paralelizez urmatoarele 
+secvente:
+	- identificarea poztiilor cozilor serpilor
+	- calcularea pozitiei jucatorilor pentru fiecare runda
+	In urma paralelizarii si rularii programului pe fep.grid.pub.ro am obtinut 
+umatoarele rezultate:
+	* 1 singur thread:
+		- input1: 0.00023301
+		- input2: 0.000222301
+		- big_input: 5.019410684
+	* 2 thread-uri:
+		- input1: 0.000142800
+		- input2: 0.000113800
+		- big_input: 2.897412941
+	* 4 thread-uri:
+		- input1: 0.000246901
+		- input2: 0.000207801
+		- big_input: 2.569474940
+	* 6 thread-uri:
+		- input1: 0.001055905
+		- input2: 0.000739003
+		- big_input:4.914693485
+	* 8 thraed-uri:
+		- input1: 0.001354507
+		- input2: 0.000855405
+		- big_input: 5.588279251
+	Dupa cum se poate observa, timpul de executie creste pe masura ce creste 
+numarul de thread-uri in cazul testelor input1 si input2, deoarece acestea sunt 
+de dimensiune mica, iar in cazul testului big_input, timpul de rulare scade pana ce 
+numarul de thread-rui atinge valoarea de 4, dupa care incepe sa creasca din nou.
